@@ -4,20 +4,9 @@
 #include<utility>
 #include<fstream>
 #include<sstream>
-#include"neuron.hh"
 #include"network.hh"
 
 using namespace std;
-
-class inputNeuron : public neuron{
-private:
-  double mData;
-
-public:
-  void set(double data){
-    mData = data;
-  }
-};
 
 int main(int argc, char** argv){
   basic_istream<char> input(nullptr);
@@ -38,10 +27,6 @@ int main(int argc, char** argv){
     double y = stod(str.substr(idx + 1));
     vals.emplace_back(x, y);
   }
-
-  network net(1, 1);
-  net.train(vals.begin(), vals.end());
-  cout << net.ask(5) << endl;
 
   return 0;
 }

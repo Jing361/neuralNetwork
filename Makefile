@@ -1,5 +1,5 @@
 CC:=g++
-SOURCES:=object/neuron.cc object/layer.cc object/network.cc
+SOURCES:=object/network.cc
 OBJECTS:=$(SOURCES:.cc=.o)
 FLAGS:=-Wall -Wextra -pedantic -std=c++14 -I./header
 name:=main
