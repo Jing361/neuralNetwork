@@ -2,6 +2,8 @@
 #define __NETWORK_HH__
 
 #include<vector>
+#include<random>
+#include<glm/mat...>
 
 class network{
 private:
@@ -13,6 +15,9 @@ public:
 	template<class iterator>
   network(iterator begin, iterator end):
 		mSizes(begin, end){
+		std::random_device rd;
+		std::mt19937 rate(rd());
+		std::normal_distributian<> gene(0, 1);
 	}
 };
 
