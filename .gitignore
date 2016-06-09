@@ -1,0 +1,4 @@
+object/*
+*.exe
+*.o
+*.swp
