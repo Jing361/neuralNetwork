@@ -11,6 +11,8 @@ private:
   std::vector<Eigen::MatrixXd> mBiases;
   std::vector<Eigen::MatrixXd> mWeights;
 
+  double sigmoid(Eigen::MatrixXd vec);
+
 public:
   template<class iterator>
   network(iterator begin, iterator end):
@@ -19,16 +21,15 @@ public:
     std::mt19937 rate(rd());
     std::normal_distribution<> gene(0, 1);
 
-    for(auto it:mSizes){
+    for(int i = 0; i < mSizes.size(); ++i){
+      auto it = mSizes[i];
       mBiases.emplace_back(it - 1, 1);
+      mWeights.emplace_back(it - 1, it - 1);
+
       for(int i = 1; i < it; ++i){
         mBiases.back()(i, 0) = gene(rate);
       }
-    }
 
-    for(int i = 0; i < mSizes.size(); ++i){
-      auto it = mSizes[i];
-      mWeights.emplace_back(it - 1, it - 1);
       for(int j = 0; j < mSizes.size() - 1; ++j){
         for(int k = 1; k < mSizes.size(); ++k){
           mWeights.back()(k, j) = gene(rate);
@@ -36,6 +37,8 @@ public:
       }
     }
   }
+
+  Eigen::MatrixXd feed(Eigen::MatrixXd a);
 };
 
 #endif
