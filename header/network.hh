@@ -3,7 +3,7 @@
 
 #include<vector>
 #include<random>
-#include<eigen/Dense>
+#include<Eigen/Dense>
 
 class network{
 private:

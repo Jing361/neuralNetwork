@@ -1,10 +1,11 @@
 #include<cmath>
+#include<unsupported/Eigen/MatrixFunctions>
 #include"network.hh"
 
 using namespace std;
 
 double network::sigmoid(Eigen::MatrixXd z){
-  return 1.0 / (1 + exp(-z));
+  return 1.0 / (1 + (-z).exp());
 }
 
 Eigen::MatrixXd network::feed(Eigen::MatrixXd a){
