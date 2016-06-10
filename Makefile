@@ -9,7 +9,7 @@ default:$(name)
 $(name):object/$(name).o $(OBJECTS)
 	$(CC) $+ $(FLAGS) -o $@
 
-object/%.o:source/%.cc
+object/%.o:source/%.cc header/%.hh
 	$(CC) -c source/$*.cc $(FLAGS) -o object/$*.o
 
 .PHONY:
