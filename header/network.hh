@@ -8,10 +8,10 @@
 class network{
 private:
   std::vector<unsigned long long> mSizes;
-  std::vector<Eigen::MatrixXd> mBiases;
+  std::vector<Eigen::VectorXd> mBiases;
   std::vector<Eigen::MatrixXd> mWeights;
 
-  double sigmoid(Eigen::MatrixXd vec);
+  Eigen::VectorXd sigmoid(const Eigen::VectorXd& vec);
 
 public:
   template<class iterator>
@@ -38,7 +38,7 @@ public:
     }
   }
 
-  Eigen::MatrixXd feed(Eigen::MatrixXd a);
+  Eigen::VectorXd feed(Eigen::VectorXd a);
 };
 
 #endif

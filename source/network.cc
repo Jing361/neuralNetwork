@@ -1,16 +1,21 @@
 #include<cmath>
-#include<unsupported/Eigen/MatrixFunctions>
 #include"network.hh"
 
 using namespace std;
+using namespace Eigen;
 
-double network::sigmoid(Eigen::MatrixXd z){
-  return 1.0 / (1 + (-z).exp());
+VectorXd network::sigmoid(const VectorXd& vec){
+  double sum = 0;
+  for(int i = 0; i < vec.size(); ++i){
+    sum += vec[i];
+  }
+  return 1.0 / (1 + exp(-sum) );
 }
 
-Eigen::MatrixXd network::feed(Eigen::MatrixXd a){
+MatrixXd network::feed(VectorXd a){
   for(int i = 0; i < mSizes.size(); ++i){
     a = sigmoid(mWeights[i].dot(a) + mBiases[i]);
   }
+	return a;
 }
 
