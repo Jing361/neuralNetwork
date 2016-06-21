@@ -28,6 +28,10 @@ int main(int argc, char** argv){
     vals.emplace_back(x, y);
   }
 
+  network net({1, 3, 2, 1});
+  Eigen::VectorXd vec(1);
+  net.feed(vec);
+
   return 0;
 }
 

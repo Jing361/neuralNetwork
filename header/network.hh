@@ -11,7 +11,7 @@ private:
   std::vector<Eigen::VectorXd> mBiases;
   std::vector<Eigen::MatrixXd> mWeights;
 
-  Eigen::VectorXd sigmoid(const Eigen::VectorXd& vec);
+  double sigmoid(const Eigen::VectorXd& vec);
 
 public:
   template<class iterator>
