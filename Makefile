@@ -1,7 +1,8 @@
 CC:=g++
-SOURCES:=object/network.cc
-OBJECTS:=$(SOURCES:.cc=.o)
+SOURCES:=source/network.cc
+OBJECTS:=$(subst source,object, $(subst .cc,.o, $(SOURCES)))
 FLAGS:=-Wall -Wextra -pedantic -std=c++14 -I./header
+
 name:=main
 
 default:$(name)
