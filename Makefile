@@ -1,18 +1,25 @@
 CC:=g++
-SOURCES:=source/network.cc
+
+SOURCEDIR:=source
+HEADERDIR:=header
+OBJECTDIR:=object
+BINARYDIR:=bin
+
+SOURCES:=$(shell find $(SOURCEDIR) -name '*.cc')
 OBJECTS:=$(subst source,object, $(subst .cc,.o, $(SOURCES)))
-FLAGS:=-Wall -Wextra -pedantic -std=c++14 -I./header
+
+FLAGS:=-Wall -Wextra -pedantic -std=c++14 -I./$(HEADERDIR)
 
 name:=main
 
 default:$(name)
 
-$(name):object/$(name).o $(OBJECTS)
+$(name):$(OBJECTDIR)/$(name).o $(OBJECTS)
 	$(CC) $+ $(FLAGS) -o $@
 
-object/%.o:source/%.cc header/%.hh
-	$(CC) -c source/$*.cc $(FLAGS) -o object/$*.o
+$(OBJECTDIR)/%.o:$(SOURCEDIR)/%.cc $(HEADERDIR)/%.hh
+	$(CC) -c $(SOURCEDIR)/$*.cc $(FLAGS) -o $(OBJECTDIR)/$*.o
 
 .PHONY:
 clean:
-	rm object/*.o *.exe*
+	rm $(OBJECTDIR)/*.o *.exe*
