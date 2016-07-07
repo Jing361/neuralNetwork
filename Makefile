@@ -42,3 +42,5 @@ clean:
 
 .PHONY:clean default
 
+#file partially written based on information from:
+#http://scottmcpeak.com/autodepend/autodepend.html
