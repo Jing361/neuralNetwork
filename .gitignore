@@ -1,4 +1,5 @@
 object/*
+dep/*
 *.exe
 *.o
 *.swp

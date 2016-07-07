@@ -8,7 +8,7 @@ BINARYDIR:=bin
 
 SOURCES:=$(shell find $(SOURCEDIR) -name '*.cc')
 OBJECTS:=$(subst $(SOURCEDIR),$(OBJECTDIR), $(subst .cc,.o, $(SOURCES)))
-DEPENDS:=$(subst $(SOURCEDIR),$(DEPENDDIR), $(SOURCES))
+DEPENDS:=$(subst $(SOURCEDIR),$(DEPENDDIR), $(subst .cc,.d, $(SOURCES)))
 
 FLAGS:=-Wall -Wextra -pedantic -std=c++14 -I./$(HEADERDIR)
 
@@ -16,7 +16,7 @@ name:=main
 
 default:$(name)
 
-$(name):$(OBJECTDIR)/$(name).o $(OBJECTS)
+$(name):$(OBJECTS)
 	$(CC) $+ $(FLAGS) -o $@
 
 -include $(DEPENDS)
@@ -28,11 +28,11 @@ $(name):$(OBJECTDIR)/$(name).o $(OBJECTS)
 #   fmt -1: list words one per line
 #   sed:    strip leading spaces
 #   sed:    add trailing colons
-$(OBJECTDIR)/%.o:$(SOURCEDIR)/%.cc $(HEADERDIR)/%.hh
+$(OBJECTDIR)/%.o:
 	$(CC) -c $(SOURCEDIR)/$*.cc $(FLAGS) -o $@
 	$(CC) -MM $(FLAGS) $(SOURCEDIR)/$*.cc > $(DEPENDDIR)/$*.d
 	@mv -f $(DEPENDDIR)/$*.d $(DEPENDDIR)/$*.d.tmp
-	@sed -e 's|.*:|$*.o:|' < $(DEPENDDIR)/$*.d.tmp > $(DEPENDDIR)/$*.d
+	@sed -e 's|.*:|$(OBJECTDIR)/$*.o:|' < $(DEPENDDIR)/$*.d.tmp > $(DEPENDDIR)/$*.d
 	@sed -e 's/.*://' -e 's/\\$$//' < $(DEPENDDIR)/$*.d.tmp | fmt -1 | \
 	  sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPENDDIR)/$*.d
 	@rm -f $(DEPENDDIR)/$*.d.tmp
@@ -44,3 +44,4 @@ clean:
 
 #file partially written based on information from:
 #http://scottmcpeak.com/autodepend/autodepend.html
+
