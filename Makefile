@@ -8,7 +8,7 @@ BINARYDIR:=bin
 
 SOURCES:=$(shell find $(SOURCEDIR) -name '*.cc')
 OBJECTS:=$(subst $(SOURCEDIR),$(OBJECTDIR), $(subst .cc,.o, $(SOURCES)))
-DEPENDS:=$(subst $(SOURCEDIR),$(DEPNDDIR), $(SOURCES))
+DEPENDS:=$(subst $(SOURCEDIR),$(DEPENDDIR), $(SOURCES))
 
 FLAGS:=-Wall -Wextra -pedantic -std=c++14 -I./$(HEADERDIR)
 
