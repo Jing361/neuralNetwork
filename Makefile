@@ -31,7 +31,8 @@ $(name):$(OBJECTDIR)/$(name).o $(OBJECTS)
 $(OBJECTDIR)/%.o:$(SOURCEDIR)/%.cc $(HEADERDIR)/%.hh
 	$(CC) -c $(SOURCEDIR)/$*.cc $(FLAGS) -o $@
 	$(CC) -MM $(FLAGS) $(SOURCEDIR)/$*.cc > $(DEPENDDIR)/$*.d
-   @cp -f $(DEPENDDIR)/$*.d $(DEPENDDIR)/$*.d.tmp
+	@mv -f $(DEPENDDIR)/$*.d $(DEPENDDIR)/$*.d.tmp
+	@sed -e 's|.*:|$*.o:|' < $(DEPENDDIR)/$*.d.tmp > $(DEPENDDIR)/$*.d
 	@sed -e 's/.*://' -e 's/\\$$//' < $(DEPENDDIR)/$*.d.tmp | fmt -1 | \
 	  sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPENDDIR)/$*.d
 	@rm -f $(DEPENDDIR)/$*.d.tmp
