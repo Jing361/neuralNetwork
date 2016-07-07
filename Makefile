@@ -1,4 +1,8 @@
-include Make.cfg
+include Makefile.cfg
+
+SOURCES:=$(shell find $(SOURCEDIR) -name '*.cc')
+OBJECTS:=$(subst $(SOURCEDIR),$(OBJECTDIR), $(subst .cc,.o, $(SOURCES)))
+DEPENDS:=$(subst $(SOURCEDIR),$(DEPENDDIR), $(subst .cc,.d, $(SOURCES)))
 
 default:$(name)
 
