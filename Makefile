@@ -3,10 +3,12 @@ CC:=g++
 SOURCEDIR:=source
 HEADERDIR:=header
 OBJECTDIR:=object
+DEPENDDIR:=dep
 BINARYDIR:=bin
 
 SOURCES:=$(shell find $(SOURCEDIR) -name '*.cc')
-OBJECTS:=$(subst source,object, $(subst .cc,.o, $(SOURCES)))
+OBJECTS:=$(subst $(SOURCEDIR),$(OBJECTDIR), $(subst .cc,.o, $(SOURCES)))
+DEPENDS:=$(subst $(SOURCEDIR),$(DEPNDDIR), $(SOURCES))
 
 FLAGS:=-Wall -Wextra -pedantic -std=c++14 -I./$(HEADERDIR)
 
@@ -17,9 +19,14 @@ default:$(name)
 $(name):$(OBJECTDIR)/$(name).o $(OBJECTS)
 	$(CC) $+ $(FLAGS) -o $@
 
-$(OBJECTDIR)/%.o:$(SOURCEDIR)/%.cc $(HEADERDIR)/%.hh
-	$(CC) -c $(SOURCEDIR)/$*.cc $(FLAGS) -o $(OBJECTDIR)/$*.o
+-include $(DEPENDS)
 
-.PHONY:
+$(OBJECTDIR)/%.o:$(SOURCEDIR)/%.cc $(HEADERDIR)/%.hh
+	$(CC) -c $(SOURCEDIR)/$*.cc $(FLAGS) -o $@
+	$(CC) -MM $(FLAGS) $(SOURCEDIR)/$*.cc > $(DEPENDDIR)/$*.d
+
 clean:
-	rm $(OBJECTDIR)/*.o *.exe*
+	rm $(OBJECTDIR)/*.o *.exe* $(DEPENDDIR)/*.d
+
+.PHONY:clean default
+
