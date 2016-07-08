@@ -5,15 +5,23 @@ OBJECTS:=$(subst $(SOURCEDIR),$(OBJECTDIR), $(subst .cc,.o, $(SOURCES)))
 DEPENDS:=$(subst $(SOURCEDIR),$(DEPENDDIR), $(subst .cc,.d, $(SOURCES)))
 DIRS:=$(SOURCEDIR) $(HEADERDIR) $(OBJECTDIR) $(DEPENDDIR) $(BINARYDIR)
 
-.PHONY:clean default dirsExist
+.PHONY:clean default
 
 default:$(DIRS) $(BINARYDIR)/$(name)
 
+debug: FLAGS += $(DFLAGS)
+debug:default
+
+release: FLAGS += $(RFLAGS)
+release:default
+
+# link everything together
 $(BINARYDIR)/$(name):$(OBJECTS)
 	$(CC) $+ $(FLAGS) -o $@
 
 -include $(DEPENDS)
 
+# generate directories
 $(DIRS):
 	@for VAR in $(DIRS); do \
 		if [ ! -d $$VAR ]; then \
