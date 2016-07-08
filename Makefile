@@ -3,13 +3,24 @@ include Makefile.cfg
 SOURCES:=$(shell find $(SOURCEDIR) -name '*.cc')
 OBJECTS:=$(subst $(SOURCEDIR),$(OBJECTDIR), $(subst .cc,.o, $(SOURCES)))
 DEPENDS:=$(subst $(SOURCEDIR),$(DEPENDDIR), $(subst .cc,.d, $(SOURCES)))
+DIRS:=$(SOURCEDIR) $(HEADERDIR) $(OBJECTDIR) $(DEPENDDIR) $(BINARYDIR)
 
-default:$(name)
+.PHONY:clean default dirsExist
 
-$(name):$(OBJECTS)
+default:$(DIRS) $(BINARYDIR)/$(name)
+
+$(BINARYDIR)/$(name):$(OBJECTS)
 	$(CC) $+ $(FLAGS) -o $@
 
 -include $(DEPENDS)
+
+$(DIRS):
+	@for VAR in $(DIRS); do \
+		if [ ! -d $$VAR ]; then \
+			echo "Making directory: $$VAR"; \
+			mkdir $$VAR; \
+		fi \
+	done
 
 # more complicated dependency computation, so all prereqs listed
 # will also become command-less, prereq-less targets
@@ -25,12 +36,10 @@ $(OBJECTDIR)/%.o:
 	@sed -e 's|.*:|$(OBJECTDIR)/$*.o:|' < $(DEPENDDIR)/$*.d.tmp > $(DEPENDDIR)/$*.d
 	@sed -e 's/.*://' -e 's/\\$$//' < $(DEPENDDIR)/$*.d.tmp | fmt -1 | \
 	  sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPENDDIR)/$*.d
-	@rm -f $(DEPENDDIR)/$*.d.tmp
+	@$(RM) -f $(DEPENDDIR)/$*.d.tmp
 
 clean:
-	rm $(OBJECTDIR)/*.o *.exe* $(DEPENDDIR)/*.d
-
-.PHONY:clean default
+	@$(RM) -rf $(OBJECTDIR) *.exe* $(DEPENDDIR) $(BINARYDIR)
 
 #file partially written based on information from:
 #http://scottmcpeak.com/autodepend/autodepend.html
