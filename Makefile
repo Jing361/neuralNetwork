@@ -3,32 +3,40 @@ include Makefile.cfg
 SOURCES:=$(shell find $(SOURCEDIR) -name '*.cc')
 OBJECTS:=$(subst $(SOURCEDIR),$(OBJECTDIR), $(subst .cc,.o, $(SOURCES)))
 DEPENDS:=$(subst $(SOURCEDIR),$(DEPENDDIR), $(subst .cc,.d, $(SOURCES)))
-DIRS:=$(SOURCEDIR) $(HEADERDIR) $(OBJECTDIR) $(DEPENDDIR) $(BINARYDIR)
+DIRS:=$(SOURCEDIR) $(HEADERDIR) $(OBJECTDIR) $(DEPENDDIR) $(BINARYDIR)\
+			$(DEBUGDIR) $(RELEASEDIR)
+BINLOC=
 
-.PHONY:clean default
+.PHONY:clean default release debug $(DEPENDS) Makefile Makefile.cfg DEFAULT RELEASE DEBUG
 
-default:$(DIRS) $(BINARYDIR)/$(name)
+default:DEFAULT
+debug:DEBUG
+release:RELEASE
+all:DEBUG RELEASE
 
-debug: FLAGS += $(DFLAGS)
-debug:default
-
-release: FLAGS += $(RFLAGS)
-release:default
+.SECONDEXPANSION:
+DEFAULT DEBUG RELEASE: FLAGS += $($@FLAGS)
+DEFAULT DEBUG RELEASE: BINLOC += $($@DIR)/$(name)
+DEFAULT DEBUG RELEASE:$(DIRS) $$(BINLOC)
 
 # link everything together
-$(BINARYDIR)/$(name):$(OBJECTS)
+%/$(name):$(OBJECTS)
 	$(CC) $+ $(FLAGS) -o $@
 
 -include $(DEPENDS)
 
 # generate directories
 $(DIRS):
-	@for VAR in $(DIRS); do \
-		if [ ! -d $$VAR ]; then \
-			echo "Making directory: $$VAR"; \
-			mkdir $$VAR; \
-		fi \
-	done
+	@echo Making directory: $@
+	@mkdir $@
+
+#dummy:
+#	@for VAR in $(DIRS); do \
+#		if [ ! -d $$VAR ]; then \
+#			echo "Making directory: $$VAR"; \
+#			mkdir $$VAR; \
+#		fi \
+#	done
 
 # more complicated dependency computation, so all prereqs listed
 # will also become command-less, prereq-less targets
